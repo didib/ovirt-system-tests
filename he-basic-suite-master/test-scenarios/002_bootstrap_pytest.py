@@ -41,6 +41,7 @@ from test_utils import constants
 from ost_utils import assertions
 from ost_utils import engine_utils
 from ost_utils import general_utils
+from ost_utils import network_utils
 from ost_utils.pytest import order_by
 from ost_utils.pytest.fixtures import root_password
 from ost_utils.pytest.fixtures.ansible import *
@@ -63,10 +64,10 @@ MB = 2 ** 20
 GB = 2 ** 30
 
 # DC/Cluster
-DC_NAME = 'test-dc'
+DC_NAME = 'Default'
 DC_VER_MAJ, DC_VER_MIN = versioning.cluster_version()
 SD_FORMAT = 'v4'
-CLUSTER_NAME = 'test-cluster'
+CLUSTER_NAME = 'Default'
 DC_QUOTA_NAME = 'DC-QUOTA'
 TEMPLATE_BLANK = 'Blank'
 
@@ -299,6 +300,7 @@ def test_engine_health_status(scheme, engine_fqdn, engine_download):
         assert engine_download(url) == b"DB Up!Welcome to Health Status!"
 
 
+@pytest.mark.skip(' [2020-12-01] hosted-engine suites only use Default DC')
 @order_by(_TEST_LIST)
 def test_add_dc(engine_api):
     engine = engine_api.system_service()
@@ -314,6 +316,7 @@ def test_add_dc(engine_api):
         )
 
 
+@pytest.mark.skip(' [2020-12-01] hosted-engine suites only use Default DC')
 @order_by(_TEST_LIST)
 def test_remove_default_dc(engine_api):
     engine = engine_api.system_service()
@@ -322,6 +325,8 @@ def test_remove_default_dc(engine_api):
         dc_service.remove()
 
 
+@pytest.mark.skip(' [2020-12-09] hosted-engine suites only use Default cluster')
+# Can't set Default DC to local storage, because we want both hosts in it.
 @order_by(_TEST_LIST)
 def test_update_default_dc(engine_api):
     engine = engine_api.system_service()
@@ -348,6 +353,7 @@ def test_update_default_cluster(engine_api):
         )
 
 
+@pytest.mark.skip(' [2020-12-01] hosted-engine suites only use Default cluster')
 @order_by(_TEST_LIST)
 def test_remove_default_cluster(engine_api):
     engine = engine_api.system_service()
@@ -371,6 +377,7 @@ def test_add_dc_quota(engine_api):
         )
     )
 
+@pytest.mark.skip(' [2020-12-01] hosted-engine suites only use Default cluster')
 @order_by(_TEST_LIST)
 def test_add_cluster(engine_api):
     engine = engine_api.system_service()
@@ -424,10 +431,20 @@ def test_add_hosts(ansible_host0_facts, ansible_host1_facts, engine_api,
                    root_password):
     engine = engine_api.system_service()
 
-    hostnames = [
+    all_hostnames = [
         facts.get("ansible_hostname")
         for facts in [ansible_host0_facts, ansible_host1_facts]
     ]
+
+    # host0 is already in the engine, because the deployment process adds it.
+    up_hosts = engine.hosts_service().list(search='datacenter={} AND status=up'.format(DC_NAME))
+    missing_hostnames = [
+        hostname
+        for hostname in all_hostnames
+        if all(hostname not in host.name for host in up_hosts)
+    ]
+    LOGGER.info(f'up_hosts: {[str(host.name) for host in up_hosts]}')
+    LOGGER.info(f'missing_hostnames: {missing_hostnames}')
 
     def _add_host(hostname):
         return engine.hosts_service().add(
@@ -441,10 +458,12 @@ def test_add_hosts(ansible_host0_facts, ansible_host1_facts, engine_api,
                     name=CLUSTER_NAME,
                 ),
             ),
+            deploy_hosted_engine=True,
         )
 
-    with test_utils.TestEvent(engine, 42):
-        for hostname in hostnames:
+    for hostname in missing_hostnames:
+        with test_utils.TestEvent(engine, 42): # USER_ADD_VDS
+            LOGGER.info(f'Adding host: {hostname}')
             assert _add_host(hostname)
 
 
@@ -506,13 +525,13 @@ def sd_iscsi_target():
 
 
 @pytest.fixture(scope="session")
-def sd_iscsi_ansible_host(ansible_engine):
-    return ansible_engine
+def sd_iscsi_ansible_host(ansible_storage):
+    return ansible_storage
 
 
 @pytest.fixture(scope="session")
-def sd_iscsi_host_ips(engine_storage_ips):
-    return engine_storage_ips
+def sd_iscsi_host_ips(ansible_storage_facts, management_network_name):
+    return network_utils.get_ips(ansible_storage_facts, management_network_name)
 
 
 @pytest.fixture
@@ -535,8 +554,8 @@ def test_add_iscsi_master_storage_domain(engine_api, sd_iscsi_host_luns):
 
 
 @pytest.fixture(scope="session")
-def sd_nfs_host_storage_ip(engine_storage_ips):
-    return engine_storage_ips[0]
+def sd_nfs_host_storage_ip(ansible_storage_facts, management_network_name):
+    return network_utils.get_ips(ansible_storage_facts, management_network_name)[0]
 
 
 @order_by(_TEST_LIST)
@@ -1210,6 +1229,10 @@ def test_add_mac_pool(engine_api):
         )
 
 
+@pytest.mark.skip(' [2020-12-14] Do not test ovirt-engine-notifier')
+# basic-suite-master configures and starts it in test_001_initialize_engine.py,
+# so it works there. HE does not (yet) do that, so can't test it.
+# No need to repeat that in HE, the test there is enough.
 @order_by(_TEST_LIST)
 def test_verify_notifier(ansible_engine):
     ansible_engine.shell('grep USER_VDC_LOGIN /var/log/messages')
@@ -1244,6 +1267,12 @@ def test_verify_glance_import(
         )
 
 
+@pytest.mark.skip(' [2020-12-14] Do not test engine-backup on HE')
+# If/when we decide to test this, we should:
+# 1. Make sure things are generally stable (this applies also to non-HE)
+# 2. Enter global maintenance
+# 3. Do the below (backup, cleanup, restore, setup)
+# 4. Exit global maintenance
 @order_by(_TEST_LIST)
 def test_verify_engine_backup(ansible_engine, engine_api):
     ansible_engine.file(
