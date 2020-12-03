@@ -9,5 +9,5 @@ EOF
 
 # engine 4 resolves its FQDN
 ADDR=$(/sbin/ip -4 -o addr show dev eth0 | awk '{split($4,a,"."); print a[1] "." a[2] "." a[3] ".1"}')
-echo "$ADDR engine" >> /etc/hosts
+echo "$ADDR ostengine" >> /etc/hosts
 

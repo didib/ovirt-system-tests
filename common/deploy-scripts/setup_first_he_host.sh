@@ -42,7 +42,7 @@ setup_ipv4() {
         | awk '{split($4,a,"."); print a[1] "." a[2] "." a[3] ".99"}'\
         | awk -F/ '{print $1}' \
     )
-    echo "${HEADDR} ${HOSTEDENGINE}.${DOMAIN} ${HOSTEDENGINE}" >> /etc/hosts
+    echo "${HEADDR} ostengine ${HOSTEDENGINE}.${DOMAIN} ${HOSTEDENGINE}" >> /etc/hosts
 
     INTERFACE=eth0
     PREFIX=24

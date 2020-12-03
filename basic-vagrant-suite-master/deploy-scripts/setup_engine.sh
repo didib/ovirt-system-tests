@@ -52,12 +52,13 @@ pkgs_to_install=(
     "ovirt-engine-extension-aaa-ldap*"
     "otopi-debug-plugins"
     "cronie"
+    "libibverbs"
 )
 
 install_firewalld
 
 if [[ "$DIST" == "el7" ]]; then
-    install_cmd="yum install --nogpgcheck -y"
+    install_cmd="yum install --nogpgcheck --downloaddir=/dev/shm -y"
 elif [[ "$DIST" =~ $FC_REGEX ]]; then
     install_cmd="dnf install -y"
 else
@@ -74,7 +75,7 @@ $install_cmd "${pkgs_to_install[@]}" || {
 systemctl enable crond
 systemctl start crond
 
-rm -rf /var/cache/yum/* /var/cache/dnf/*
+rm -rf /dev/shm/yum /dev/shm/*.rpm
 fstrim -va
 echo "restrict 192.168.0.0 mask 255.255.0.0 nomodify notrap nopeer" >> /etc/ntp.conf
 systemctl enable ntpd
@@ -85,7 +86,6 @@ firewall-cmd --reload
 # Enable debug logs on the engine
 sed -i \
     -e '/.*logger category="org.ovirt"/{ n; s/INFO/DEBUG/ }' \
-    -e '/.*logger category="org.ovirt.engine.core.bll"/{ n; s/INFO/DEBUG/ }' \
     -e '/.*<root-logger>/{ n; s/INFO/DEBUG/ }' \
     /usr/share/ovirt-engine/services/ovirt-engine/ovirt-engine.xml.in
 

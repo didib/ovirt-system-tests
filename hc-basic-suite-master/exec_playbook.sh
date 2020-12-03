@@ -36,11 +36,11 @@ HEADDR=$(\
     | awk '{split($4,a,"."); print a[1] "." a[2] "." a[3] ".99"}'\
     | awk -F/ '{print $1}'\
 )
-echo "${HEADDR} ${HOSTEDENGINE}.${DOMAIN} ${HOSTEDENGINE}" >> /etc/hosts
+echo "${HEADDR} ostengine ${HOSTEDENGINE}.${DOMAIN} ${HOSTEDENGINE}" >> /etc/hosts
 
 # Update the engine address in other hosts too, for auto-addition to work
-ssh root@${HOST2IP} "echo "${HEADDR} ${HOSTEDENGINE}.${DOMAIN} ${HOSTEDENGINE}" >> /etc/hosts"
-ssh root@${HOST3IP} "echo "${HEADDR} ${HOSTEDENGINE}.${DOMAIN} ${HOSTEDENGINE}" >> /etc/hosts"
+ssh root@${HOST2IP} "echo "${HEADDR} ostengine ${HOSTEDENGINE}.${DOMAIN} ${HOSTEDENGINE}" >> /etc/hosts"
+ssh root@${HOST3IP} "echo "${HEADDR} ostengine ${HOSTEDENGINE}.${DOMAIN} ${HOSTEDENGINE}" >> /etc/hosts"
 
 sed \
     -e "s,@GW@,${HEGW},g" \

@@ -36,7 +36,7 @@ EOF
 # engine 4 resolves its FQDN
 NIC=$(ip route | awk '$1=="default" {print $5; exit}')
 ADDR=$(/sbin/ip -4 -o addr show dev $NIC | awk '{split($4,a,"."); print a[1] "." a[2] "." a[3] "." a[4]}'| awk -F/ '{print $1}')
-echo "$ADDR engine" >> /etc/hosts
+echo "$ADDR ostengine" >> /etc/hosts
 
 # if you want to add anything here, please try to preinstall it first
 pkgs_to_install=(

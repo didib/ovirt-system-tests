@@ -290,7 +290,7 @@ setup_ipv6_and_dns() {
     HOST_NAME="host"
     STORAGE_NAME="storage"
     STORAGE_IP_SUFFIX=200
-    HE_NAME="engine"
+    HE_NAME="ostengine"
     HE_SUFFIX=250
 
     nmcli con modify ${NIC} ipv6.addresses ${IPV6NET}${SUBNET}::${STORAGE_IP_SUFFIX}/${ADDR_PREFIX} \
