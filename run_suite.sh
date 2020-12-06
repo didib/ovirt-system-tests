@@ -238,6 +238,18 @@ env_dump_ansible_hosts() {
     cd -
 }
 
+env_verify_host_names() {
+    cd "$PREFIX"
+    for vm in $(lago --out-format flat status | \
+        gawk 'match($0, /^VMs\/(.*)\/status:*/, m){ print m[1]; }')\
+        ; do
+        if echo "$vm" | grep -i 'engine' | grep -iq 'host'; then
+            logger.error "VM name ${vm} contains both 'engine' and 'host'"
+            exit 1
+	fi
+    done
+}
+
 env_ovirt_start() {
     cd "$PREFIX"
     "$CLI" ovirt start

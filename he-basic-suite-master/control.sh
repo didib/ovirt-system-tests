@@ -78,6 +78,7 @@ run_suite(){
         install_local_rpms
     fi
     env_start
+    env_verify_host_names
     env_dump_ansible_hosts
     env_copy_repo_file
     env_copy_config_file
