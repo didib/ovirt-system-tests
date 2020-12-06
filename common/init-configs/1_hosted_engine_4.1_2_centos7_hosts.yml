@@ -125,7 +125,7 @@ nets:
       start: 100
       end: 254
     management: true
-    dns_domain_name: lago.local
+    dns_domain_name: {{ env.dns_domain_name }}
 
   lago-{{ env.suite_name }}-net-mgmt-ipv6:
     type: nat

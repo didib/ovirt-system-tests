@@ -72,7 +72,7 @@ EOT
         done
         echo "dnf upgrade --nogpgcheck -y" >> add_plain_repos.sh
     fi
-    suite_name="$SUITE_NAME" engine_image=$engine_image host_image=$host_image use_ost_images=1 add_plain_repos=1 python3 common/scripts/render_jinja_templates.py "${SUITE}/LagoInitFile.in" > "${SUITE}/LagoInitFile"
+    dns_domain_name="lago.local" suite_name="$SUITE_NAME" engine_image=$engine_image host_image=$host_image use_ost_images=1 add_plain_repos=1 python3 common/scripts/render_jinja_templates.py "${SUITE}/LagoInitFile.in" > "${SUITE}/LagoInitFile"
 
     lago init $LAGO_INIT_SSH_KEY "$PREFIX" "$SUITE/LagoInitFile"
 
