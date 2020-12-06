@@ -1,8 +1,6 @@
 #!/bin/bash -xe
 set -o pipefail
 
-HE_ANSIBLE=1
-
 export SSG_PROFILE="xccdf_org.ssgproject.content_profile_standard"
 
 . "${OST_REPO_ROOT}"/he-basic-suite-master/control.sh
