@@ -747,6 +747,9 @@ export OST_REPO_ROOT="$PWD"
 # Resolves to suite's path, i.e. '/home/me/ovirt-system-tests/basic-suite-master'
 export SUITE="$(realpath --no-symlinks "$1")"
 
+# Can't be just "engine" for hosted-engine suites, because the deploy code uses an ansible group called 'engine'.
+export ENGINE_FQDN=engine.lago.local
+
 # Suite's name, i.e. 'basic-suite-master'
 export SUITE_NAME="${SUITE##*/}"
 

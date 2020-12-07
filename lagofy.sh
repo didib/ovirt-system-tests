@@ -137,6 +137,10 @@ collect_logs() {
 
 export OST_REPO_ROOT=$(realpath "$PWD")
 export SUITE=${OST_REPO_ROOT}/${1:-basic-suite-master}
+
+# Can't be just "engine" for hosted-engine suites, because the deploy code uses an ansible group called 'engine'.
+export ENGINE_FQDN=engine.lago.local
+
 SUITE_NAME="${SUITE##*/}"
 echo -n "Suite $SUITE_NAME - "
 export PREFIX=${OST_REPO_ROOT}/deployment-${SUITE_NAME}
