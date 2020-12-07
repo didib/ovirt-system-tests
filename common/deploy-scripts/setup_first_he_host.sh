@@ -1,10 +1,10 @@
 #!/bin/bash -x
-HE_FQDN="$1"
+ENGINE_FQDN="$1"
+STORAGEHOSTNAME="$2"
 shift
 
 DOMAIN=$(dnsdomainname)
 MYHOSTNAME="$(hostname | sed s/_/-/g)"
-STORAGEHOSTNAME="${HE_FQDN/engine/storage}"
 VMPASS=123456
 ENGINEPASS=123
 HE_SETUP_HOOKS_DIR="/usr/share/ansible/collections/ansible_collections/ovirt/ovirt/roles/hosted_engine_setup/hooks"
@@ -42,7 +42,7 @@ setup_ipv4() {
         | awk '{split($4,a,"."); print a[1] "." a[2] "." a[3] ".99"}'\
         | awk -F/ '{print $1}' \
     )
-    echo "${HEADDR} ${HE_FQDN}" >> /etc/hosts
+    echo "${HEADDR} ${ENGINE_FQDN}" >> /etc/hosts
 
     INTERFACE=eth0
     PREFIX=24
@@ -97,7 +97,7 @@ sed \
     -e "s,@ENGINEPASS@,${ENGINEPASS},g" \
     -e "s,@DOMAIN@,${DOMAIN},g" \
     -e "s,@MYHOSTNAME@,${MYHOSTNAME}.${DOMAIN},g" \
-    -e "s,@HE_FQDN@,${HE_FQDN},g" \
+    -e "s,@ENGINE_FQDN@,${ENGINE_FQDN},g" \
     -e "s,@STORAGEHOSTNAME@,${STORAGEHOSTNAME},g" \
     -e "s,@INTERFACE@,${INTERFACE},g" \
     -e "s,@PREFIX@,${PREFIX},g" \
