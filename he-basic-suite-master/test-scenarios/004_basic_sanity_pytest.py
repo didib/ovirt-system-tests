@@ -34,11 +34,6 @@ from ost_utils import ssh
 from ost_utils import utils
 from ost_utils import versioning
 from ost_utils.pytest import order_by
-from ost_utils.pytest.fixtures.ansible import *
-from ost_utils.pytest.fixtures.engine import *
-from ost_utils.pytest.fixtures.sdk import *
-from ost_utils.pytest.fixtures.virt import *
-from ost_utils.pytest.fixtures.vm import *
 
 import ovirtsdk4 as sdk4
 import ovirtsdk4.types as types
@@ -55,8 +50,8 @@ KB = 2 ** 10
 MB = 2 ** 20
 GB = 2 ** 30
 
-DC_NAME = 'test-dc'
-TEST_CLUSTER = 'test-cluster'
+DC_NAME = 'Default'
+TEST_CLUSTER = 'Default'
 TEMPLATE_CENTOS7 = 'centos7_template'
 TEMPLATE_BLANK = 'Blank'
 
@@ -188,7 +183,7 @@ def test_verify_add_all_hosts(engine_api):
     total_hosts = len(hosts_service.list(search='datacenter={}'.format(DC_NAME)))
 
     assertions.assert_true_within(
-        lambda: host_status_utils._all_hosts_up(hosts_service, total_hosts),
+        lambda: host_status_utils._all_hosts_up(hosts_service, total_hosts, DC_NAME),
         timeout=constants.ADD_HOST_TIMEOUT
     )
 
