@@ -28,4 +28,6 @@ from ost_utils.pytest.fixtures.ansible import *
 from ost_utils.pytest.fixtures.engine import *
 from ost_utils.pytest.fixtures.network import *
 from ost_utils.pytest.fixtures.sdk import *
+from ost_utils.pytest.fixtures.virt import *
+from ost_utils.pytest.fixtures.vm import *
 from ost_utils.pytest.running_time import *
