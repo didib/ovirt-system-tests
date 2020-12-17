@@ -19,34 +19,33 @@
 # Refer to the README and COPYING files for full details of the license
 #
 
-import os
-
 import pytest
 
 from ost_utils import ansible
-from ost_utils.ansible import patterns
+from ost_utils.ansible import facts
+from ost_utils.ansible import module_mappers
 from ost_utils.ansible import private_dir as pd
 from ost_utils.pytest.fixtures.artifacts import artifacts_dir
 
 
 @pytest.fixture(scope="session")
 def ansible_engine():
-    return ansible.module_mapper_for(patterns.engine())
+    return module_mappers.engine()
 
 
 @pytest.fixture(scope="session")
 def ansible_hosts():
-    return ansible.module_mapper_for(patterns.hosts())
+    return module_mappers.hosts()
 
 
 @pytest.fixture(scope="session")
 def ansible_host0():
-    return ansible.module_mapper_for(patterns.host0())
+    return module_mappers.host0()
 
 
 @pytest.fixture(scope="session")
 def ansible_host1():
-    return ansible.module_mapper_for(patterns.host1())
+    return module_mappers.host1()
 
 
 @pytest.fixture(scope="session")
@@ -66,17 +65,17 @@ def ansible_by_hostname(ansible_engine, ansible_host0, ansible_host1):
 
 @pytest.fixture(scope="session")
 def ansible_engine_facts():
-    return ansible.Facts(patterns.engine())
+    return facts.engine()
 
 
 @pytest.fixture(scope="session")
 def ansible_host0_facts():
-    return ansible.Facts(patterns.host0())
+    return facts.host0()
 
 
 @pytest.fixture(scope="session")
 def ansible_host1_facts():
-    return ansible.Facts(patterns.host1())
+    return facts.host1()
 
 
 @pytest.fixture(scope="session", autouse=True)
