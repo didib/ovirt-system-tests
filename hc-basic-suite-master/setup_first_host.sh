@@ -22,6 +22,7 @@ DISK_DEV=sdc
 
 mkfs.xfs -K /dev/${DISK_DEV}
 mount /dev/${DISK_DEV} /var/tmp
+chmod 1777 /var/tmp
 echo -e '/dev/${DISK_DEV}\t/var/tmp\t\t\txfs\tdefaults\t0 0' >> /etc/fstab
 
 
