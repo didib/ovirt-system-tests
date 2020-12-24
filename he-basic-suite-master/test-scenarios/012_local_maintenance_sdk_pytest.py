@@ -29,9 +29,9 @@ import pytest
 from test_utils import ipv6_utils
 
 from ost_utils import assertions
+from ost_utils import he_utils
 
 VM_HE_NAME = 'HostedEngine'
-WAIT_VALUE = 300
 
 
 @pytest.fixture(scope='module', autouse=True)
@@ -39,10 +39,9 @@ def setup_module():
     ipv6_utils.open_connection_to_api_with_ipv6_on_relevant_suite()
 
 
-def test_local_maintenance(hosts_service, get_vm_service_for_vm):
+def test_local_maintenance(hosts_service, get_vm_service_for_vm, ansible_host0):
     logging.info('Waiting For System Stability...')
-    # TODO: Replace arbitrary sleep with something more sensible
-    time.sleep(WAIT_VALUE)
+    he_utils.wait_until_engine_vm_is_not_migrating(ansible_host0)
 
     vm_service = get_vm_service_for_vm(VM_HE_NAME)
     he_host_id = vm_service.get().host.id
@@ -65,8 +64,7 @@ def test_local_maintenance(hosts_service, get_vm_service_for_vm):
     )
 
     logging.info('Waiting For System Stability...')
-    # TODO: Replace arbitrary sleep with something more sensible
-    time.sleep(WAIT_VALUE)
+    he_utils.wait_until_engine_vm_is_not_migrating(ansible_host0)
 
     logging.info('Waiting For Maintenance...')
     assertions.assert_true_within_long(
