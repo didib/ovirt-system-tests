@@ -21,19 +21,20 @@
 from __future__ import print_function
 
 import datetime
+from dateutil import tz
 
 
 RUNNING_TIMES = {}
 
 
 def pytest_runtest_logstart(nodeid, location):
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(tz.tzlocal())
     RUNNING_TIMES[location] = now
-    print(now.strftime('started at %Y-%m-%d %H:%M:%S'), end=' ')
+    print(now.strftime('started at %Y-%m-%d %H:%M:%S%z'), end=' ')
 
 
 def pytest_runtest_logfinish(nodeid, location):
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(tz.tzlocal())
     then = RUNNING_TIMES[location]
     delta = int((now - then).total_seconds())
     print(" ({}s)".format(delta), end='')
