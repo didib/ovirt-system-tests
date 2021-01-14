@@ -106,7 +106,7 @@ sed \
 
 fstrim -va
 rm -rf /var/cache/yum/*
-hosted-engine --deploy --config-append=/root/hosted-engine-deploy-answers-file.conf
+hosted-engine --deploy --ansible-extra-vars=he_offline_deployment=true --config-append=/root/hosted-engine-deploy-answers-file.conf
 RET_CODE=$?
 if [ ${RET_CODE} -ne 0 ]; then
     echo "hosted-engine deploy on ${MYHOSTNAME} failed with status ${RET_CODE}."
