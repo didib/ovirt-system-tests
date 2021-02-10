@@ -25,6 +25,23 @@ from ost_utils.pytest.fixtures.backend import backend
 from ost_utils.pytest.fixtures.backend import hosts_hostnames
 
 
+TEST_DC_NAME = 'test-dc'
+TEST_CLUSTER_NAME = 'test-cluster'
+
+DEFAULT_DC_NAME = 'Default'
+DEFAULT_CLUSTER_NAME = 'Default'
+
+
+@pytest.fixture(scope="session")
+def dc_name():
+    return TEST_DC_NAME
+
+
+@pytest.fixture(scope="session")
+def cluster_name():
+    return TEST_CLUSTER_NAME
+
+
 @pytest.fixture(scope="session")
 def hostnames_to_add(hosts_hostnames):
     return hosts_hostnames
