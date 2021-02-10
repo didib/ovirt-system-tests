@@ -448,8 +448,44 @@ def test_sync_time(ansible_hosts, engine_hostname):
 
 @order_by(_TEST_LIST)
 def test_add_hosts(engine_api, root_password, hostnames_to_add,
-                   hostnames_to_reboot, cluster_name):
+                   hostnames_to_reboot, cluster_name, dc_name):
     engine = engine_api.system_service()
+
+    all_hostnames = hostnames_to_add
+
+    # hosted-engine deployment already adds the host it deploys on,
+    # do not add it again
+    up_hosts = engine.hosts_service().list(
+        search='datacenter={} AND status=up'.format(dc_name)
+    )
+    missing_hostnames = [
+        hostname
+        for hostname in all_hostnames
+        # We need this complex condition because in some places
+        # we add hosts with their short hostname (no .domain).
+        # TODO: Make up our minds, simplify the condition
+        if all(hostname not in host.name for host in up_hosts)
+    ]
+    LOGGER.info(f'up_hosts: {[str(host.name) for host in up_hosts]}')
+    LOGGER.info(f'missing_hostnames: {missing_hostnames}')
+
+    def _reboot(hostname):
+        # If we already have Up hosts, we can reboot the rest.
+        # Otherwise, do not reboot the first one.
+        # TODO: Consider adding this logic to hostnames_to_reboot
+        # or keep it only here.
+        return (
+            up_hosts or
+            hostname in hostnames_to_reboot
+        )
+
+    def _deploy_hosted_engine():
+        # TODO make this cleaner.
+        # For now, if we have Up hosts, we assume that it's a hosted-engine
+        # deployment, so add the other hosts to the HA cluster.
+        # Going forward, we should probably have some tag/flag/fixture per
+        # suite saying whether it's a hosted-engine suite or not.
+        return bool(up_hosts)
 
     def _add_host(hostname):
         return engine.hosts_service().add(
@@ -463,9 +499,15 @@ def test_add_hosts(engine_api, root_password, hostnames_to_add,
                     name=cluster_name,
                 ),
             ),
-            reboot=(hostname in hostnames_to_reboot)
+            reboot=_reboot(hostname),
+            deploy_hosted_engine=_deploy_hosted_engine(),
         )
 
+    # TODO: In [1] I changed the order - I put the 'with' inside
+    # the loop. IMO it makes more sense - to check the event per
+    # each host, not just overall. Decide and either replace or
+    # remove this comment.
+    # [1] https://gerrit.ovirt.org/c/ovirt-system-tests/+/112490
     with test_utils.TestEvent(engine, 42):
         for hostname in hostnames_to_add:
             assert _add_host(hostname)
