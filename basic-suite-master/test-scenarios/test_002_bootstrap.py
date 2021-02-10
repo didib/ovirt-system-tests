@@ -304,6 +304,10 @@ def test_engine_health_status(scheme, engine_fqdn, engine_download):
         assert engine_download(url) == b"DB Up!Welcome to Health Status!"
 
 
+@pytest.mark.skipif(
+    dc_name != TEST_DC_NAME,
+    reason=' [2020-12-01] hosted-engine suites only use Default DC',
+)
 @order_by(_TEST_LIST)
 def test_add_dc(engine_api, dc_name):
     engine = engine_api.system_service()
@@ -319,6 +323,10 @@ def test_add_dc(engine_api, dc_name):
         )
 
 
+@pytest.mark.skipif(
+    dc_name != TEST_DC_NAME,
+    reason=' [2020-12-01] hosted-engine suites only use Default DC',
+)
 @order_by(_TEST_LIST)
 def test_remove_default_dc(engine_api):
     engine = engine_api.system_service()
@@ -327,6 +335,11 @@ def test_remove_default_dc(engine_api):
         dc_service.remove()
 
 
+@pytest.mark.skipif(
+    dc_name != TEST_DC_NAME,
+    reason=' [2020-12-01] hosted-engine suites only use Default DC',
+)
+# Can't set Default DC to local storage, because we want both hosts in it.
 @order_by(_TEST_LIST)
 def test_update_default_dc(engine_api):
     engine = engine_api.system_service()
@@ -353,6 +366,10 @@ def test_update_default_cluster(engine_api):
         )
 
 
+@pytest.mark.skipif(
+    cluster_name != TEST_CLUSTER_NAME,
+    reason=' [2020-12-01] hosted-engine suites only use Default cluster',
+)
 @order_by(_TEST_LIST)
 def test_remove_default_cluster(engine_api):
     engine = engine_api.system_service()
@@ -376,6 +393,11 @@ def test_add_dc_quota(engine_api, dc_name):
         )
     )
 
+
+@pytest.mark.skipif(
+    cluster_name != TEST_CLUSTER_NAME,
+    reason=' [2020-12-01] hosted-engine suites only use Default cluster',
+)
 @order_by(_TEST_LIST)
 def test_add_cluster(engine_api, cluster_name):
     engine = engine_api.system_service()
@@ -1212,6 +1234,16 @@ def test_add_mac_pool(engine_api):
         )
 
 
+@pytest.mark.skipif(
+    dc_name != TEST_DC_NAME,
+    reason=' [2020-12-14] Do not test ovirt-engine-notifier on HE suites',
+)
+# basic-suite-master configures and starts it in test_001_initialize_engine.py,
+# so it works there. HE does not (yet) do that, so can't test it.
+# No need to repeat that in HE, the test there is enough.
+# TODO:
+# - Perhaps change the condition to make it more relevant
+# - Fix :-)
 @order_by(_TEST_LIST)
 def test_verify_notifier(ansible_engine):
     ansible_engine.shell('grep USER_VDC_LOGIN /var/log/messages')
@@ -1246,6 +1278,15 @@ def test_verify_glance_import(
         )
 
 
+@pytest.mark.skipif(
+    dc_name != TEST_DC_NAME,
+    reason=' [2020-12-14] Do not test engine-backup on hosted-engine suites',
+)
+# If/when we decide to test this, we should:
+# 1. Make sure things are generally stable (this applies also to non-HE)
+# 2. Enter global maintenance
+# 3. Do the below (backup, cleanup, restore, setup)
+# 4. Exit global maintenance
 @order_by(_TEST_LIST)
 def test_verify_engine_backup(ansible_engine, engine_api):
     ansible_engine.file(
