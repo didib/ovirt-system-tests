@@ -33,12 +33,12 @@ DEFAULT_CLUSTER_NAME = 'Default'
 
 
 @pytest.fixture(scope="session")
-def dc_name():
+def ost_dc_name():
     return TEST_DC_NAME
 
 
 @pytest.fixture(scope="session")
-def cluster_name():
+def ost_cluster_name():
     return TEST_CLUSTER_NAME
 
 
