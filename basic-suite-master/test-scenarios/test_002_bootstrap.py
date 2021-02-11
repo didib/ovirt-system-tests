@@ -220,7 +220,7 @@ def _all_hosts_up(hosts_service, total_num_hosts, dc_name):
             host_service.activate()
         return False
 
-    _check_problematic_hosts(hosts_service)
+    _check_problematic_hosts(hosts_service, dc_name)
 
 def _single_host_up(hosts_service, total_num_hosts, dc_name):
     installing_hosts = hosts_service.list(
@@ -234,7 +234,7 @@ def _single_host_up(hosts_service, total_num_hosts, dc_name):
     if len(up_hosts):
         return True
 
-    _check_problematic_hosts(hosts_service)
+    _check_problematic_hosts(hosts_service, dc_name)
 
 def _check_problematic_hosts(hosts_service, dc_name):
     problematic_hosts = hosts_service.list(search='datacenter={} AND status != installing and status != initializing and status != up'.format(dc_name))
@@ -512,7 +512,7 @@ def test_verify_add_hosts(engine_api, ost_dc_name):
     dump_hosts = _host_status_to_print(hosts_service, hosts_status)
     LOGGER.debug('Host status, verify_add_hosts:\n {}'.format(dump_hosts))
     assertions.assert_true_within(
-        lambda: _single_host_up(hosts_service, total_hosts),
+        lambda: _single_host_up(hosts_service, total_hosts, ost_dc_name),
         timeout=constants.ADD_HOST_TIMEOUT
     )
 
