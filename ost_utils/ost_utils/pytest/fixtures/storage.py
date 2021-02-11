@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 #
-# Copyright 2020 Red Hat, Inc.
+# Copyright 2021 Red Hat, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,29 +18,33 @@
 # Refer to the README and COPYING files for full details of the license
 #
 
+from __future__ import absolute_import
+
 import pytest
 
-from ost_utils.pytest import pytest_collection_modifyitems
-
-from ost_utils.pytest.fixtures.artifacts import artifacts_dir
-from ost_utils.pytest.fixtures.ansible import *
-from ost_utils.pytest.fixtures.backend import *
-from ost_utils.pytest.fixtures.engine import *
-from ost_utils.pytest.fixtures.network import *
-from ost_utils.pytest.fixtures.sdk import *
-from ost_utils.pytest.running_time import *
+from ost_utils import network_utils
 
 
 @pytest.fixture(scope="session")
-def sd_iscsi_host_ips(storage_management_ips):
-    return storage_management_ips
+def storage_ips_for_network(ansible_storage_facts):
+    return functools.partial(network_utils.get_ips, ansible_storage_facts)
 
 
 @pytest.fixture(scope="session")
-def sd_nfs_host_storage_ip(storage_management_ips):
-    return storage_management_ips[0]
+def storage_management_ips(storage_ips_for_network, management_network_name):
+    return storage_ips_for_network(management_network_name)
+
+
+@pytest.fixture(scope="session")
+def sd_iscsi_host_ips():
+    raise RuntimeError('Please override sd_iscsi_host_ips')
+
+
+@pytest.fixture(scope="session")
+def sd_nfs_host_storage_ip(_storage_ips):
+    raise RuntimeError('Please override sd_nfs_host_storage_ip')
 
 
 pytest.fixture(scope="session")
 def sd_iscsi_ansible_host(ansible_storage):
-    return ansible_storage
+    raise RuntimeError('Please override sd_iscsi_ansible_host')
