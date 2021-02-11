@@ -35,6 +35,7 @@ from ost_utils import utils
 from ost_utils import versioning
 from ost_utils.pytest import order_by
 from ost_utils.pytest.fixtures.ansible import *
+from ost_utils.pytest.fixtures.defaults import *
 from ost_utils.pytest.fixtures.engine import *
 from ost_utils.pytest.fixtures.sdk import *
 from ost_utils.pytest.fixtures.virt import *
@@ -55,8 +56,6 @@ KB = 2 ** 10
 MB = 2 ** 20
 GB = 2 ** 30
 
-DC_NAME = 'test-dc'
-TEST_CLUSTER = 'test-cluster'
 TEMPLATE_CENTOS7 = 'centos7_template'
 TEMPLATE_BLANK = 'Blank'
 
@@ -185,9 +184,9 @@ def vm_ssh(get_vm_ip, vm_user, vm_password):
 
 
 @order_by(_TEST_LIST)
-def test_verify_add_all_hosts(engine_api):
+def test_verify_add_all_hosts(engine_api, dc_name):
     hosts_service = engine_api.system_service().hosts_service()
-    total_hosts = len(hosts_service.list(search='datacenter={}'.format(DC_NAME)))
+    total_hosts = len(hosts_service.list(search='datacenter={}'.format(dc_name)))
 
     assertions.assert_true_within(
         lambda: host_status_utils._all_hosts_up(hosts_service, total_hosts),
@@ -443,7 +442,7 @@ def test_add_snapshot_for_backup(engine_api):
 
 
 @order_by(_TEST_LIST)
-def test_clone_powered_off_vm(system_service, vms_service):
+def test_clone_powered_off_vm(system_service, vms_service, cluster_name):
     # Prepare a VM with minimal disk size to clone
     vms_service.add(
         types.Vm(
@@ -453,7 +452,7 @@ def test_clone_powered_off_vm(system_service, vms_service):
                 name=TEMPLATE_BLANK,
             ),
             cluster=types.Cluster(
-                name=TEST_CLUSTER,
+                name=cluster_name,
             ),
         )
     )
@@ -865,13 +864,13 @@ def _import_ova(engine, correlation_id, vm_name, imported_url, storage_domain, c
 
 
 @order_by(_TEST_LIST)
-def test_import_vm1(engine_api):
+def test_import_vm1(engine_api, cluster_name):
     _import_ova(engine_api.system_service(),
                 "test_validate_ova_import_vm",
                 IMPORTED_VM_NAME,
                 IMPORTED_OVA_NAME,
                 SD_ISCSI_NAME,
-                TEST_CLUSTER)
+                cluster_name)
 
 
 def _verify_vm_import(
@@ -892,13 +891,13 @@ def test_verify_vm_import(engine_api):
 
 
 @order_by(_TEST_LIST)
-def test_import_template_as_vm(engine_api):
+def test_import_template_as_vm(engine_api, cluster_name):
     _import_ova(engine_api.system_service(),
                 "test_validate_ova_import_temp",
                 IMPORTED_TEMP_NAME,
                 IMPORTED_TEMP_OVA_NAME,
                 SD_NFS_NAME,
-                TEST_CLUSTER)
+                cluster_name)
 
 
 @order_by(_TEST_LIST)
@@ -909,7 +908,7 @@ def test_verify_template_import(engine_api):
 
 
 @order_by(_TEST_LIST)
-def test_add_vm1_from_template(engine_api, cirros_image_glance_template_name):
+def test_add_vm1_from_template(engine_api, cirros_image_glance_template_name, cluster_name):
     engine = engine_api.system_service()
     templates_service = engine.templates_service()
     glance_template = templates_service.list(
@@ -928,7 +927,7 @@ def test_add_vm1_from_template(engine_api, cirros_image_glance_template_name):
             description='CirrOS imported from Glance as Template',
             memory= vm_memory,
             cluster=types.Cluster(
-                name=TEST_CLUSTER,
+                name=cluster_name,
             ),
             template=types.Template(
                 name=cirros_image_glance_template_name,
@@ -1133,10 +1132,10 @@ def test_template_export(engine_api, cirros_image_glance_template_name):
 
 
 @order_by(_TEST_LIST)
-def test_add_vm_pool(engine_api, cirros_image_glance_template_name):
+def test_add_vm_pool(engine_api, cirros_image_glance_template_name, cluster_name):
     engine = engine_api.system_service()
     pools_service = engine.vm_pools_service()
-    pool_cluster = engine.clusters_service().list(search='name={}'.format(TEST_CLUSTER))[0]
+    pool_cluster = engine.clusters_service().list(search='name={}'.format(cluster_name))[0]
     pool_template = engine.templates_service().list(search='name={}'.format(
         cirros_image_glance_template_name
     ))[0]
@@ -1492,10 +1491,10 @@ def test_verify_suspend_resume_vm0(engine_api, vm_ssh):
 
 
 @order_by(_TEST_LIST)
-def test_reconstruct_master_domain(engine_api):
+def test_reconstruct_master_domain(engine_api, dc_name):
     pytest.skip('TODO:Handle case where tasks are running')
     system_service = engine_api.system_service()
-    dc_service = test_utils.data_center_service(system_service, DC_NAME)
+    dc_service = test_utils.data_center_service(system_service, dc_name)
     attached_sds_service = dc_service.storage_domains_service()
     master_sd = next(sd for sd in attached_sds_service.list() if sd.master)
     attached_sd_service = attached_sds_service.storage_domain_service(master_sd.id)
@@ -1514,7 +1513,7 @@ def test_reconstruct_master_domain(engine_api):
 
 
 @order_by(_TEST_LIST)
-def test_ovf_import(engine_api):
+def test_ovf_import(engine_api, cluster_name):
     # Read the OVF file and replace the disk id
     engine = engine_api.system_service()
     disk_service = test_utils.get_disk_service(engine, DISK0_NAME)
@@ -1531,7 +1530,7 @@ def test_ovf_import(engine_api):
         types.Vm(
             name=OVF_VM_NAME,
             cluster=types.Cluster(
-                name=TEST_CLUSTER,
+                name=cluster_name,
             ),
             initialization=types.Initialization(
                 configuration=types.Configuration(
