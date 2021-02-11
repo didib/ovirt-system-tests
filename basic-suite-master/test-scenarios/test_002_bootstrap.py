@@ -305,12 +305,10 @@ def test_engine_health_status(scheme, engine_fqdn, engine_download):
         assert engine_download(url) == b"DB Up!Welcome to Health Status!"
 
 
-@pytest.mark.skipif(
-    ost_dc_name != TEST_DC_NAME,
-    reason=' [2020-12-01] hosted-engine suites only use Default DC',
-)
 @order_by(_TEST_LIST)
 def test_add_dc(engine_api, ost_dc_name):
+    if ost_dc_name != TEST_DC_NAME:
+        pytest.skip(' [2020-12-01] hosted-engine suites only use Default DC')
     engine = engine_api.system_service()
     dcs_service = engine.data_centers_service()
     with test_utils.TestEvent(engine, 950): # USER_ADD_STORAGE_POOL
@@ -324,25 +322,21 @@ def test_add_dc(engine_api, ost_dc_name):
         )
 
 
-@pytest.mark.skipif(
-    ost_dc_name != TEST_DC_NAME,
-    reason=' [2020-12-01] hosted-engine suites only use Default DC',
-)
 @order_by(_TEST_LIST)
 def test_remove_default_dc(engine_api):
+    if ost_dc_name != TEST_DC_NAME:
+        pytest.skip(' [2020-12-01] hosted-engine suites only use Default DC')
     engine = engine_api.system_service()
     dc_service = test_utils.data_center_service(engine, 'Default')
     with test_utils.TestEvent(engine, 954): # USER_REMOVE_STORAGE_POOL event
         dc_service.remove()
 
 
-@pytest.mark.skipif(
-    ost_dc_name != TEST_DC_NAME,
-    reason=' [2020-12-01] hosted-engine suites only use Default DC',
-)
 # Can't set Default DC to local storage, because we want both hosts in it.
 @order_by(_TEST_LIST)
 def test_update_default_dc(engine_api):
+    if ost_dc_name != TEST_DC_NAME:
+        pytest.skip(' [2020-12-01] hosted-engine suites only use Default DC')
     engine = engine_api.system_service()
     dc_service = test_utils.data_center_service(engine, 'Default')
     with test_utils.TestEvent(engine, 952): # USER_UPDATE_STORAGE_POOL event
@@ -367,12 +361,10 @@ def test_update_default_cluster(engine_api):
         )
 
 
-@pytest.mark.skipif(
-    ost_cluster_name != TEST_CLUSTER_NAME,
-    reason=' [2020-12-01] hosted-engine suites only use Default cluster',
-)
 @order_by(_TEST_LIST)
 def test_remove_default_cluster(engine_api):
+    if ost_cluster_name != TEST_CLUSTER_NAME:
+        pytest.skip(' [2020-12-01] hosted-engine suites only use Default cluster')
     engine = engine_api.system_service()
     cl_service = test_utils.get_cluster_service(engine, 'Default')
     with test_utils.TestEvent(engine, 813): # USER_REMOVE_CLUSTER event
@@ -395,12 +387,10 @@ def test_add_dc_quota(engine_api, ost_dc_name):
     )
 
 
-@pytest.mark.skipif(
-    ost_cluster_name != TEST_CLUSTER_NAME,
-    reason=' [2020-12-01] hosted-engine suites only use Default cluster',
-)
 @order_by(_TEST_LIST)
 def test_add_cluster(engine_api, ost_cluster_name, ost_dc_name):
+    if ost_cluster_name != TEST_CLUSTER_NAME:
+        pytest.skip(' [2020-12-01] hosted-engine suites only use Default cluster')
     engine = engine_api.system_service()
     clusters_service = engine.clusters_service()
     provider_id = network_utils_v4.get_default_ovn_provider_id(engine)
@@ -1305,18 +1295,17 @@ def test_add_mac_pool(engine_api):
         )
 
 
-@pytest.mark.skipif(
-    ost_dc_name != TEST_DC_NAME,
-    reason=' [2020-12-14] Do not test ovirt-engine-notifier on HE suites',
-)
-# basic-suite-master configures and starts it in test_001_initialize_engine.py,
-# so it works there. HE does not (yet) do that, so can't test it.
-# No need to repeat that in HE, the test there is enough.
-# TODO:
-# - Perhaps change the condition to make it more relevant
-# - Fix :-)
 @order_by(_TEST_LIST)
 def test_verify_notifier(ansible_engine, ost_dc_name):
+    if ost_dc_name != TEST_DC_NAME:
+        # basic-suite-master configures and starts it in
+        # test_001_initialize_engine.py, so it works there. HE does not (yet)
+        # do that, so can't test it.
+        # No need to repeat that in HE, the test there is enough.
+        # TODO:
+        # - Perhaps change the condition to make it more relevant
+        # - Fix :-)
+        pytest.skip(' [2020-12-14] Do not test ovirt-engine-notifier on HE suites')
     ansible_engine.shell('grep USER_VDC_LOGIN /var/log/messages')
     ansible_engine.systemd(name='ovirt-engine-notifier', state='stopped')
     ansible_engine.systemd(name='snmptrapd', state='stopped')
@@ -1349,17 +1338,15 @@ def test_verify_glance_import(
         )
 
 
-@pytest.mark.skipif(
-    ost_dc_name != TEST_DC_NAME,
-    reason=' [2020-12-14] Do not test engine-backup on hosted-engine suites',
-)
-# If/when we decide to test this, we should:
-# 1. Make sure things are generally stable (this applies also to non-HE)
-# 2. Enter global maintenance
-# 3. Do the below (backup, cleanup, restore, setup)
-# 4. Exit global maintenance
 @order_by(_TEST_LIST)
 def test_verify_engine_backup(ansible_engine, engine_api):
+    if ost_dc_name != TEST_DC_NAME:
+        # If/when we decide to test this, we should:
+        # 1. Make sure things are generally stable (this applies also to non-HE)
+        # 2. Enter global maintenance
+        # 3. Do the below (backup, cleanup, restore, setup)
+        # 4. Exit global maintenance
+        pytest.skip(' [2020-12-14] Do not test engine-backup on hosted-engine suites')
     ansible_engine.file(
         path='/var/log/ost-engine-backup',
         state='directory',
