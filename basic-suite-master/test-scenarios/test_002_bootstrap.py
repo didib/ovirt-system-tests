@@ -48,6 +48,7 @@ from ost_utils.pytest.fixtures.ansible import *
 from ost_utils.pytest.fixtures.defaults import *
 from ost_utils.pytest.fixtures.engine import *
 from ost_utils.pytest.fixtures.network import storage_network_name
+from ost_utils.pytest.fixtures.storage import *
 from ost_utils.pytest.fixtures.virt import *
 from ost_utils.selenium.grid.common import http_proxy_disabled
 from ost_utils.storage_utils import domain
@@ -561,44 +562,6 @@ def sd_iscsi_target():
     return SD_ISCSI_TARGET
 
 
-def _storage_on_engine():
-    # TODO: decide about this elsewhere - in the backend, some fixtures module?
-    return backend.default_backend().storage_hostname() is not None
-
-
-@pytest.fixture(scope="session")
-def sd_iscsi_ansible_host(ansible_engine, ansible_storage):
-    return (
-        ansible_engine
-        if _storage_on_engine()
-        else ansible_storage
-    )
-
-
-@pytest.fixture(scope="session")
-def _storage_ips(
-    engine_storage_ips,
-    ansible_storage_facts,
-    management_network_name
-):
-    # TODO: Fix this ugliness.
-    # When designing a solution, also consider, that currently, if the engine
-    # is used for storage, we have a separate storage network (in basic-suite,
-    # anyway), whereas in HE suites we do not.
-    # It might be best to add a storage network to HE suites, instead of
-    # keeping this difference.
-    return (
-        engine_storage_ips
-        if _storage_on_engine()
-        else network_utils.get_ips(ansible_storage_facts, management_network_name)
-    )
-
-
-@pytest.fixture(scope="session")
-def sd_iscsi_host_ips(_storage_ips):
-    return _storage_ips
-
-
 @pytest.fixture
 def sd_iscsi_host_lun_uuids(sd_iscsi_ansible_host):
     return lun.get_uuids(sd_iscsi_ansible_host)[:SD_ISCSI_NR_LUNS]
@@ -616,11 +579,6 @@ def sd_iscsi_host_luns(sd_iscsi_host_lun_uuids, sd_iscsi_host_ips,
 @pytest.mark.skipif(MASTER_SD_TYPE != 'iscsi', reason='not using iscsi')
 def test_add_iscsi_master_storage_domain(engine_api, sd_iscsi_host_luns):
     add_iscsi_storage_domain(engine_api, sd_iscsi_host_luns)
-
-
-@pytest.fixture(scope="session")
-def sd_nfs_host_storage_ip(_storage_ips):
-    return _storage_ips[0]
 
 
 @order_by(_TEST_LIST)
