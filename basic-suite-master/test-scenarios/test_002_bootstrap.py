@@ -39,6 +39,7 @@ from test_utils import network_utils_v4
 from test_utils import constants
 
 from ost_utils import assertions
+from ost_utils import backend
 from ost_utils import engine_utils
 from ost_utils import general_utils
 from ost_utils.pytest import order_by
@@ -570,14 +571,42 @@ def sd_iscsi_target():
     return SD_ISCSI_TARGET
 
 
-@pytest.fixture(scope="session")
-def sd_iscsi_ansible_host(ansible_engine):
-    return ansible_engine
+def _storage_on_engine():
+    # TODO: decide about this elsewhere - in the backend, some fixtures module?
+    return backend.default_backend().storage_hostname() is not None
 
 
 @pytest.fixture(scope="session")
-def sd_iscsi_host_ips(engine_storage_ips):
-    return engine_storage_ips
+def sd_iscsi_ansible_host(ansible_engine, ansible_storage):
+    return (
+        ansible_engine
+        if _storage_on_engine()
+        else ansible_storage
+    )
+
+
+@pytest.fixture(scope="session")
+def _storage_ips(
+    engine_storage_ips,
+    ansible_storage_facts,
+    management_network_name
+):
+    # TODO: Fix this ugliness.
+    # When designing a solution, also consider, that currently, if the engine
+    # is used for storage, we have a separate storage network (in basic-suite,
+    # anyway), whereas in HE suites we do not.
+    # It might be best to add a storage network to HE suites, instead of
+    # keeping this difference.
+    return (
+        engine_storage_ips
+        if _storage_on_engine()
+        else network_utils.get_ips(ansible_storage_facts, management_network_name)
+    )
+
+
+@pytest.fixture(scope="session")
+def sd_iscsi_host_ips(_storage_ips):
+    return _storage_ips
 
 
 @pytest.fixture
@@ -600,8 +629,8 @@ def test_add_iscsi_master_storage_domain(engine_api, sd_iscsi_host_luns):
 
 
 @pytest.fixture(scope="session")
-def sd_nfs_host_storage_ip(engine_storage_ips):
-    return engine_storage_ips[0]
+def sd_nfs_host_storage_ip(_storage_ips):
+    return _storage_ips[0]
 
 
 @order_by(_TEST_LIST)
