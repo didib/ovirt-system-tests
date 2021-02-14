@@ -39,10 +39,10 @@ def sd_iscsi_host_ips():
 
 
 @pytest.fixture(scope="session")
-def sd_nfs_host_storage_ip(_storage_ips):
+def sd_nfs_host_storage_ip():
     raise RuntimeError('Please override sd_nfs_host_storage_ip')
 
 
 pytest.fixture(scope="session")
-def sd_iscsi_ansible_host(ansible_storage):
+def sd_iscsi_ansible_host():
     raise RuntimeError('Please override sd_iscsi_ansible_host')
