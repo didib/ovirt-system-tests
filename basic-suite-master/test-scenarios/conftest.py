@@ -37,7 +37,7 @@ from ost_utils.pytest.fixtures.backend import hosts_hostnames
 from ost_utils.pytest.fixtures.defaults import hostnames_to_add
 from ost_utils.pytest.fixtures.defaults import hostnames_to_reboot
 
-from ost_utils.pytest.fixtures.stoage import *
+from ost_utils.pytest.fixtures.storage import *
 
 from ost_utils.pytest.running_time import *
 
