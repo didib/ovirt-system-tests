@@ -523,7 +523,7 @@ def test_verify_add_all_hosts(engine_api, ost_dc_name):
     total_hosts = len(hosts_service.list(search='datacenter={}'.format(ost_dc_name)))
 
     assertions.assert_true_within(
-        lambda: _all_hosts_up(hosts_service, total_hosts),
+        lambda: _all_hosts_up(hosts_service, total_hosts, ost_dc_name),
         timeout=constants.ADD_HOST_TIMEOUT
     )
 
@@ -577,14 +577,14 @@ def sd_iscsi_host_luns(sd_iscsi_host_lun_uuids, sd_iscsi_host_ips,
 
 @order_by(_TEST_LIST)
 @pytest.mark.skipif(MASTER_SD_TYPE != 'iscsi', reason='not using iscsi')
-def test_add_iscsi_master_storage_domain(engine_api, sd_iscsi_host_luns):
-    add_iscsi_storage_domain(engine_api, sd_iscsi_host_luns)
+def test_add_iscsi_master_storage_domain(engine_api, sd_iscsi_host_luns, ost_dc_name):
+    add_iscsi_storage_domain(engine_api, sd_iscsi_host_luns, ost_dc_name)
 
 
 @order_by(_TEST_LIST)
 @pytest.mark.skipif(MASTER_SD_TYPE != 'nfs', reason='not using nfs')
-def test_add_nfs_master_storage_domain(engine_api, sd_nfs_host_storage_ip):
-    add_nfs_storage_domain(engine_api, sd_nfs_host_storage_ip)
+def test_add_nfs_master_storage_domain(engine_api, sd_nfs_host_storage_ip, ost_dc_name):
+    add_nfs_storage_domain(engine_api, sd_nfs_host_storage_ip, ost_dc_name)
 
 
 def add_nfs_storage_domain(engine_api, sd_nfs_host_storage_ip, dc_name):
@@ -607,20 +607,20 @@ def add_second_nfs_storage_domain(engine_api, sd_nfs_host_storage_ip, dc_name):
 
 @order_by(_TEST_LIST)
 def test_add_secondary_storage_domains(engine_api, sd_nfs_host_storage_ip,
-                                       sd_iscsi_host_luns):
+                                       sd_iscsi_host_luns, ost_dc_name):
     if MASTER_SD_TYPE == 'iscsi':
         vt = utils.VectorThread(
             [
                 functools.partial(add_nfs_storage_domain, engine_api,
-                                  sd_nfs_host_storage_ip),
+                                  sd_nfs_host_storage_ip, ost_dc_name),
 # 12/07/2017 commenting out iso domain creation until we know why it causing random failures
 # Bug-Url: http://bugzilla.redhat.com/1463263
 #                functools.partial(add_iso_storage_domain, engine_api,
-#                                  sd_nfs_host_storage_ip),
+#                                  sd_nfs_host_storage_ip, ost_dc_name),
                 functools.partial(add_templates_storage_domain, engine_api,
-                                  sd_nfs_host_storage_ip),
+                                  sd_nfs_host_storage_ip, ost_dc_name),
                 functools.partial(add_second_nfs_storage_domain, engine_api,
-                                  sd_nfs_host_storage_ip),
+                                  sd_nfs_host_storage_ip, ost_dc_name),
 
             ],
         )
@@ -628,15 +628,15 @@ def test_add_secondary_storage_domains(engine_api, sd_nfs_host_storage_ip,
         vt = utils.VectorThread(
             [
                 functools.partial(add_iscsi_storage_domain, engine_api,
-                                  sd_iscsi_host_luns),
+                                  sd_iscsi_host_luns, ost_dc_name),
 # 12/07/2017 commenting out iso domain creation until we know why it causing random failures
 #Bug-Url: http://bugzilla.redhat.com/1463263
 #                functools.partial(add_iso_storage_domain, engine_api,
-#                                  sd_nfs_host_storage_ip),
+#                                  sd_nfs_host_storage_ip, ost_dc_name),
                 functools.partial(add_templates_storage_domain, engine_api,
-                                  sd_nfs_host_storage_ip),
+                                  sd_nfs_host_storage_ip, ost_dc_name),
                 functools.partial(add_second_nfs_storage_domain, engine_api,
-                                  sd_nfs_host_storage_ip),
+                                  sd_nfs_host_storage_ip, ost_dc_name),
 
             ],
         )
