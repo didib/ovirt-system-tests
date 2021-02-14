@@ -35,14 +35,14 @@ def storage_management_ips(storage_ips_for_network, management_network_name):
 
 @pytest.fixture(scope="session")
 def sd_iscsi_host_ips():
-    raise RuntimeError('Please override sd_iscsi_host_ips')
+    return 'Please override sd_iscsi_host_ips'
 
 
 @pytest.fixture(scope="session")
 def sd_nfs_host_storage_ip():
-    raise RuntimeError('Please override sd_nfs_host_storage_ip')
+    return 'Please override sd_nfs_host_storage_ip'
 
 
 pytest.fixture(scope="session")
 def sd_iscsi_ansible_host():
-    raise RuntimeError('Please override sd_iscsi_ansible_host')
+    return 'Please override sd_iscsi_ansible_host'
