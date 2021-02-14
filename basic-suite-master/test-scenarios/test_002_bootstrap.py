@@ -48,7 +48,6 @@ from ost_utils.pytest.fixtures.ansible import *
 from ost_utils.pytest.fixtures.defaults import *
 from ost_utils.pytest.fixtures.engine import *
 from ost_utils.pytest.fixtures.network import storage_network_name
-from ost_utils.pytest.fixtures.storage import *
 from ost_utils.pytest.fixtures.virt import *
 from ost_utils.selenium.grid.common import http_proxy_disabled
 from ost_utils.storage_utils import domain
