@@ -40,6 +40,7 @@ from test_utils import constants
 
 from ost_utils import assertions
 from ost_utils import backend
+from ost_utils import engine_object_names
 from ost_utils import engine_utils
 from ost_utils import general_utils
 from ost_utils.pytest import order_by
@@ -179,7 +180,7 @@ _TEST_LIST = [
 ]
 
 
-def _hosts_in_dc(api, dc_name=TEST_DC_NAME, random_host=False):
+def _hosts_in_dc(api, dc_name=engine_object_names.TEST_DC_NAME, random_host=False):
     hosts_service = api.system_service().hosts_service()
     all_hosts = _wait_for_status(hosts_service, dc_name, types.HostStatus.UP)
     up_hosts = [host for host in all_hosts if host.status == types.HostStatus.UP]
@@ -192,10 +193,10 @@ def _hosts_in_dc(api, dc_name=TEST_DC_NAME, random_host=False):
     dump_hosts = _host_status_to_print(hosts_service, hosts_status)
     raise RuntimeError('Could not find hosts that are up in DC {} \nHost status: {}'.format(dc_name, dump_hosts) )
 
-def _random_host_from_dc(api, dc_name=TEST_DC_NAME):
+def _random_host_from_dc(api, dc_name=engine_object_names.TEST_DC_NAME):
     return _hosts_in_dc(api, dc_name, True)
 
-def _random_host_service_from_dc(api, dc_name=TEST_DC_NAME):
+def _random_host_service_from_dc(api, dc_name=engine_object_names.TEST_DC_NAME):
     host = _hosts_in_dc(api, dc_name, True)
     return api.system_service().hosts_service().host_service(id=host.id)
 
@@ -306,7 +307,7 @@ def test_engine_health_status(scheme, engine_fqdn, engine_download):
 
 @order_by(_TEST_LIST)
 def test_add_dc(engine_api, ost_dc_name):
-    if ost_dc_name != TEST_DC_NAME:
+    if ost_dc_name != engine_object_names.TEST_DC_NAME:
         pytest.skip(' [2020-12-01] hosted-engine suites only use Default DC')
     engine = engine_api.system_service()
     dcs_service = engine.data_centers_service()
@@ -323,7 +324,7 @@ def test_add_dc(engine_api, ost_dc_name):
 
 @order_by(_TEST_LIST)
 def test_remove_default_dc(engine_api, ost_dc_name):
-    if ost_dc_name != TEST_DC_NAME:
+    if ost_dc_name != engine_object_names.TEST_DC_NAME:
         pytest.skip(' [2020-12-01] hosted-engine suites only use Default DC')
     engine = engine_api.system_service()
     dc_service = test_utils.data_center_service(engine, 'Default')
@@ -334,7 +335,7 @@ def test_remove_default_dc(engine_api, ost_dc_name):
 # Can't set Default DC to local storage, because we want both hosts in it.
 @order_by(_TEST_LIST)
 def test_update_default_dc(engine_api, ost_dc_name):
-    if ost_dc_name != TEST_DC_NAME:
+    if ost_dc_name != engine_object_names.TEST_DC_NAME:
         pytest.skip(' [2020-12-01] hosted-engine suites only use Default DC')
     engine = engine_api.system_service()
     dc_service = test_utils.data_center_service(engine, 'Default')
@@ -362,7 +363,7 @@ def test_update_default_cluster(engine_api):
 
 @order_by(_TEST_LIST)
 def test_remove_default_cluster(engine_api, ost_cluster_name):
-    if ost_cluster_name != TEST_CLUSTER_NAME:
+    if ost_cluster_name != engine_object_names.TEST_CLUSTER_NAME:
         pytest.skip(' [2020-12-01] hosted-engine suites only use Default cluster')
     engine = engine_api.system_service()
     cl_service = test_utils.get_cluster_service(engine, 'Default')
@@ -388,7 +389,7 @@ def test_add_dc_quota(engine_api, ost_dc_name):
 
 @order_by(_TEST_LIST)
 def test_add_cluster(engine_api, ost_cluster_name, ost_dc_name):
-    if ost_cluster_name != TEST_CLUSTER_NAME:
+    if ost_cluster_name != engine_object_names.TEST_CLUSTER_NAME:
         pytest.skip(' [2020-12-01] hosted-engine suites only use Default cluster')
     engine = engine_api.system_service()
     clusters_service = engine.clusters_service()
@@ -1254,7 +1255,7 @@ def test_add_mac_pool(engine_api):
 
 @order_by(_TEST_LIST)
 def test_verify_notifier(ansible_engine, ost_dc_name):
-    if ost_dc_name != TEST_DC_NAME:
+    if ost_dc_name != engine_object_names.TEST_DC_NAME:
         # basic-suite-master configures and starts it in
         # test_001_initialize_engine.py, so it works there. HE does not (yet)
         # do that, so can't test it.
@@ -1297,7 +1298,7 @@ def test_verify_glance_import(
 
 @order_by(_TEST_LIST)
 def test_verify_engine_backup(ansible_engine, engine_api):
-    if ost_dc_name != TEST_DC_NAME:
+    if ost_dc_name != engine_object_names.TEST_DC_NAME:
         # If/when we decide to test this, we should:
         # 1. Make sure things are generally stable (this applies also to non-HE)
         # 2. Enter global maintenance

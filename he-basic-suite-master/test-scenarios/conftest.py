@@ -21,6 +21,8 @@
 
 import pytest
 
+from ost_utils import engine_object_names
+
 from ost_utils.pytest import pytest_collection_modifyitems
 
 from ost_utils.pytest.fixtures.artifacts import artifacts_dir
@@ -58,9 +60,9 @@ def sd_iscsi_ansible_host(ansible_storage): # pylint: disable=function-redefined
 
 @pytest.fixture(scope="session")
 def ost_dc_name(): # pylint: disable=function-redefined
-    return DEFAULT_DC_NAME
+    return engine_object_names.DEFAULT_DC_NAME
 
 
 @pytest.fixture(scope="session")
 def ost_cluster_name(): # pylint: disable=function-redefined
-    return DEFAULT_CLUSTER_NAME
+    return engine_object_names.DEFAULT_CLUSTER_NAME
