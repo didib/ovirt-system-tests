@@ -53,7 +53,7 @@ def sd_nfs_host_storage_ip(engine_storage_ips): # pylint: disable=function-redef
     return engine_storage_ips[0]
 
 
-pytest.fixture(scope="session")
+@pytest.fixture(scope="session")
 def sd_iscsi_ansible_host(ansible_engine): # pylint: disable=function-redefined
     return ansible_engine
 
