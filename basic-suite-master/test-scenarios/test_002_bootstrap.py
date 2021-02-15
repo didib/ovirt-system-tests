@@ -323,7 +323,7 @@ def test_add_dc(engine_api, ost_dc_name):
 
 
 @order_by(_TEST_LIST)
-def test_remove_default_dc(engine_api):
+def test_remove_default_dc(engine_api, ost_dc_name):
     if ost_dc_name != TEST_DC_NAME:
         pytest.skip(' [2020-12-01] hosted-engine suites only use Default DC')
     engine = engine_api.system_service()
@@ -334,7 +334,7 @@ def test_remove_default_dc(engine_api):
 
 # Can't set Default DC to local storage, because we want both hosts in it.
 @order_by(_TEST_LIST)
-def test_update_default_dc(engine_api):
+def test_update_default_dc(engine_api, ost_dc_name):
     if ost_dc_name != TEST_DC_NAME:
         pytest.skip(' [2020-12-01] hosted-engine suites only use Default DC')
     engine = engine_api.system_service()
@@ -362,7 +362,7 @@ def test_update_default_cluster(engine_api):
 
 
 @order_by(_TEST_LIST)
-def test_remove_default_cluster(engine_api):
+def test_remove_default_cluster(engine_api, ost_cluster_name):
     if ost_cluster_name != TEST_CLUSTER_NAME:
         pytest.skip(' [2020-12-01] hosted-engine suites only use Default cluster')
     engine = engine_api.system_service()
