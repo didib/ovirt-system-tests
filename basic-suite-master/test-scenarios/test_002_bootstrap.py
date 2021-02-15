@@ -1297,7 +1297,7 @@ def test_verify_glance_import(
 
 
 @order_by(_TEST_LIST)
-def test_verify_engine_backup(ansible_engine, engine_api):
+def test_verify_engine_backup(ansible_engine, engine_api, ost_dc_name):
     if ost_dc_name != engine_object_names.TEST_DC_NAME:
         # If/when we decide to test this, we should:
         # 1. Make sure things are generally stable (this applies also to non-HE)
