@@ -45,7 +45,6 @@ from ost_utils import general_utils
 from ost_utils.pytest import order_by
 from ost_utils.pytest.fixtures import root_password
 from ost_utils.pytest.fixtures.ansible import *
-from ost_utils.pytest.fixtures.defaults import *
 from ost_utils.pytest.fixtures.engine import *
 from ost_utils.pytest.fixtures.network import storage_network_name
 from ost_utils.pytest.fixtures.virt import *
