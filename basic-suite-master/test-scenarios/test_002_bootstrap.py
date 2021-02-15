@@ -449,6 +449,7 @@ def test_add_hosts(engine_api, root_password, hostnames_to_add,
     up_hosts = engine.hosts_service().list(
         search='datacenter={} AND status=up'.format(ost_dc_name)
     )
+    LOGGER.info(f'ost_dc_name: {ost_dc_name}')
     missing_hostnames = [
         hostname
         for hostname in all_hostnames
