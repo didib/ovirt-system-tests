@@ -466,7 +466,7 @@ def test_add_hosts(engine_api, root_password, hostnames_to_add,
         # Otherwise, do not reboot the first one.
         # TODO: Consider adding this logic to hostnames_to_reboot
         # or keep it only here.
-        return (
+        return bool(
             up_hosts or
             hostname in hostnames_to_reboot
         )
