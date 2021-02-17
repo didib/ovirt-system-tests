@@ -188,7 +188,7 @@ def test_verify_add_all_hosts(engine_api, ost_dc_name):
     total_hosts = len(hosts_service.list(search='datacenter={}'.format(ost_dc_name)))
 
     assertions.assert_true_within(
-        lambda: host_status_utils._all_hosts_up(hosts_service, total_hosts),
+        lambda: host_status_utils._all_hosts_up(hosts_service, total_hosts, dc_name=ost_dc_name),
         timeout=constants.ADD_HOST_TIMEOUT
     )
 
