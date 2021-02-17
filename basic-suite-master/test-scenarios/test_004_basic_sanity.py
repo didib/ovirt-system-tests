@@ -35,7 +35,6 @@ from ost_utils import utils
 from ost_utils import versioning
 from ost_utils.pytest import order_by
 from ost_utils.pytest.fixtures.ansible import *
-from ost_utils.pytest.fixtures.defaults import *
 from ost_utils.pytest.fixtures.engine import *
 from ost_utils.pytest.fixtures.sdk import *
 from ost_utils.pytest.fixtures.virt import *
