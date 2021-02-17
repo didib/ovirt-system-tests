@@ -18,6 +18,7 @@
 # Refer to the README and COPYING files for full details of the license
 #
 
+import functools
 import pytest
 
 from ost_utils import network_utils
