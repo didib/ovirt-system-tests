@@ -237,7 +237,7 @@ def _single_host_up(hosts_service, total_num_hosts, dc_name):
     _check_problematic_hosts(hosts_service, dc_name)
 
 def _check_problematic_hosts(hosts_service, dc_name):
-    problematic_hosts = hosts_service.list(search='datacenter={} AND status != installing and status != initializing and status != up'.format(dc_name))
+    problematic_hosts = hosts_service.list(search='datacenter={} AND status != installing and status != initializing and status != reboot and status != up'.format(dc_name))
     if len(problematic_hosts):
         dump_hosts = '%s hosts failed installation:\n' % len(problematic_hosts)
         for host in problematic_hosts:
