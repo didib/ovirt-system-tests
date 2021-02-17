@@ -44,6 +44,6 @@ def sd_nfs_host_storage_ip():
     return 'Please override sd_nfs_host_storage_ip'
 
 
-pytest.fixture(scope="session")
+@pytest.fixture(scope="session")
 def sd_iscsi_ansible_host():
     return 'Please override sd_iscsi_ansible_host'
