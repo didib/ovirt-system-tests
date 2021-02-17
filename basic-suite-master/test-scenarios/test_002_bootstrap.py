@@ -501,7 +501,7 @@ def test_add_hosts(engine_api, root_password, hostnames_to_add,
     # remove this comment.
     # [1] https://gerrit.ovirt.org/c/ovirt-system-tests/+/112490
     with test_utils.TestEvent(engine, 42):
-        for hostname in hostnames_to_add:
+        for hostname in missing_hostnames:
             assert _add_host(hostname)
 
 
