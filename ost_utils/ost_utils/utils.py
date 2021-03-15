@@ -82,6 +82,7 @@ class VectorThread:
     def start_all(self):
         self.thread_handles = []
         for target in self.targets:
+            LOGGER.debug(f'start_all: Starting {target}')
             q = queue.Queue()
             t = threading.Thread(target=_ret_via_queue, args=(target, q))
             self.thread_handles.append((t, q))
@@ -92,6 +93,7 @@ class VectorThread:
             return self.results
 
         for t, q in self.thread_handles:
+            LOGGER.debug(f'join_all: Joining {t} (q={q})')
             t.join()
 
         self.results = [q.get() for _, q in self.thread_handles]

@@ -20,6 +20,8 @@
 
 import ansible_runner
 
+import uuid
+
 from ost_utils import backend
 from ost_utils.ansible import config_builder as cb
 from ost_utils.ansible import patterns
@@ -79,10 +81,11 @@ def module_mapper_for(host_pattern):
 
 
 def _run_ansible_runner(config_builder):
+    my_id = str(uuid.uuid4())
     runner = ansible_runner.Runner(config=config_builder.prepare())
-    LOGGER.debug(f'_run_ansible_runner: before run: {runner}')
+    LOGGER.debug(f'_run_ansible_runner: {my_id} before run: config_builder: {config_builder}')
     runner.run()
-    LOGGER.debug(f'_run_ansible_runner: after run: {runner}')
+    LOGGER.debug(f'_run_ansible_runner: {my_id} after run: stats: {runner.stats}')
 
     if runner.status != 'successful':
         raise AnsibleExecutionError(
