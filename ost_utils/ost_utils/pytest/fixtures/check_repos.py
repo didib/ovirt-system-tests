@@ -42,7 +42,7 @@ def check_installed_packages(ansible_by_hostname):
     if all(_check_if_user_specified_repos(pckgs_dict) and
            _check_if_no_packages_used(pckgs_dict) for pckgs_dict in
            vms_pckgs_dict_list):
-        raise RuntimeError('None of user custom repos has been used')
+        LOGGER.warn('None of user custom repos have been used')
     yield
 
 
