@@ -162,6 +162,7 @@ class ModuleMapper:
 
     def __init__(self, config_builder):
         self.config_builder = config_builder
+        LOGGER.debug(f'ModuleMapper __init__: {config_builder}')
 
     def __getattr__(self, name):
         self.config_builder.module = name
