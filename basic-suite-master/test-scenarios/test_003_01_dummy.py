@@ -33,6 +33,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 def do_something_1(ansible_engine):
+    LOGGER.info(f'do_something_1: Start')
     res = ansible_engine.shell(
       'echo $(date) $(hostname) something 1'
     )
@@ -40,6 +41,7 @@ def do_something_1(ansible_engine):
 
 
 def do_something_2(ansible_engine):
+    LOGGER.info(f'do_something_2: Start')
     res = ansible_engine.shell(
       'echo $(date) $(hostname) something 2'
     )
