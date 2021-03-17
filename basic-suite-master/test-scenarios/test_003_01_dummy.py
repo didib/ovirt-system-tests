@@ -49,6 +49,7 @@ def do_something_2(ansible_engine):
 
 def test_dummy(ansible_engine):
     for i in range(100):
+        LOGGER.info(f'test_dummy: Starting iteration {i}')
         vt = utils.VectorThread(
             [
                 functools.partial(do_something_1, ansible_engine),
