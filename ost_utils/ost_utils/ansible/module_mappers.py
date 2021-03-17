@@ -170,7 +170,7 @@ class ModuleMapper:
     def __getattr__(self, name):
         self.config_builder.module = name
         res = ModuleArgsMapper(self.config_builder)
-        LOGGER.debug(f'ModuleMapper {self._my_id} __getattr__: {res}')
+        LOGGER.debug(f'ModuleMapper {self._my_id} config_builder {self.config_builder} __getattr__: {res}')
         return res
 
     def __str__(self):
