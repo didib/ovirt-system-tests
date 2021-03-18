@@ -48,7 +48,7 @@ def do_something_2(ansible_engine):
     LOGGER.info(f'do_something_2: res: {res["stdout"]}')
 
 def test_dummy(ansible_engine):
-    for i in range(100):
+    for i in range(1000):
         LOGGER.info(f'test_dummy: Starting iteration {i}')
         vt = utils.VectorThread(
             [
