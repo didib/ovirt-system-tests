@@ -34,17 +34,17 @@ LOGGER = logging.getLogger(__name__)
 
 def do_something_1(ansible_engine):
     LOGGER.info(f'do_something_1: Start')
-    res = ansible_engine.shell(
-      'echo $(date) $(hostname) something 1'
-    )
+    mam = ansible_engine.shell
+    LOGGER.info(f'do_something_1: mam: {mam}')
+    res = mam('echo $(date) $(hostname) something 1')
     LOGGER.info(f'do_something_1: {res["stdout"]}')
 
 
 def do_something_2(ansible_engine):
     LOGGER.info(f'do_something_2: Start')
-    res = ansible_engine.shell(
-      'echo $(date) $(hostname) something 2'
-    )
+    mam = ansible_engine.shell
+    LOGGER.info(f'do_something_2: mam: {mam}')
+    res = mam('echo $(date) $(hostname) something 2')
     LOGGER.info(f'do_something_2: {res["stdout"]}')
 
 def test_dummy(ansible_engine):
