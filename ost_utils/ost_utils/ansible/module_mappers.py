@@ -133,16 +133,16 @@ class ModuleArgsMapper:
     def __init__(self, config_builder):
         self.config_builder = config_builder
         self._my_id = str(uuid.uuid4())
-        LOGGER.debug(f'ModuleArgsMapper {self._my_id} __init__: {config_builder}')
+        LOGGER.debug(f'ModuleArgsMapper {self._my_id} info: __init__: {config_builder}')
 
     def __call__(self, *args, **kwargs):
         self.config_builder.module_args = " ".join((
             " ".join(args),
             " ".join("{}={}".format(k, v) for k, v in kwargs.items())
         )).strip()
-        LOGGER.debug(f'ModuleArgsMapper {self._my_id} : __call__: module_args={self.config_builder.module_args}')
+        LOGGER.debug(f'ModuleArgsMapper {self._my_id} : info: method: __call__: module_args={self.config_builder.module_args}')
         res = _run_ansible_runner(self.config_builder)
-        LOGGER.debug(f'ModuleArgsMapper {self._my_id} : res: {res}')
+        LOGGER.debug(f'ModuleArgsMapper {self._my_id} : info: res: {res}')
         return res
 
     def __str__(self):
