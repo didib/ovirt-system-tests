@@ -37,7 +37,7 @@ def do_something_1(ansible_engine):
     mam = ansible_engine.shell
     LOGGER.info(f'do_something_1: mam: {mam}')
     res = mam('echo $(date) $(hostname) something 1')
-    LOGGER.info(f'do_something_1: {res["stdout"]}')
+    LOGGER.info(f'do_something_1: res: {res["stdout"]}')
 
 
 def do_something_2(ansible_engine):
@@ -45,7 +45,7 @@ def do_something_2(ansible_engine):
     mam = ansible_engine.shell
     LOGGER.info(f'do_something_2: mam: {mam}')
     res = mam('echo $(date) $(hostname) something 2')
-    LOGGER.info(f'do_something_2: {res["stdout"]}')
+    LOGGER.info(f'do_something_2: res: {res["stdout"]}')
 
 def test_dummy(ansible_engine):
     for i in range(100):
