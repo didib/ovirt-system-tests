@@ -130,8 +130,11 @@ class ModuleArgsMapper:
     for the module.
 
     """
-    def __init__(self, config_builder):
-        self.config_builder = config_builder
+    def __init__(self, config_builder, module):
+        self.config_builder = cb.ConfigBuilder()
+        self.config_builder.inventory = config_builder.inventory
+        self.config_builder.host_pattern = config_builder.host_pattern
+        self.config_builder.module = module
         self._my_id = str(uuid.uuid4())
         LOGGER.debug(f'ModuleArgsMapper {self._my_id} info: __init__: {config_builder}')
 
@@ -170,8 +173,7 @@ class ModuleMapper:
         LOGGER.debug(f'ModuleMapper {self._my_id} __init__: {config_builder}')
 
     def __getattr__(self, name):
-        self.config_builder.module = name
-        res = ModuleArgsMapper(self.config_builder)
+        res = ModuleArgsMapper(self.config_builder, module=name)
         LOGGER.debug(f'ModuleMapper {self._my_id} config_builder {self.config_builder} __getattr__: {res}')
         return res
 
