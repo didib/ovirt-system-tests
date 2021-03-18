@@ -141,7 +141,9 @@ class ModuleArgsMapper:
             " ".join("{}={}".format(k, v) for k, v in kwargs.items())
         )).strip()
         LOGGER.debug(f'ModuleArgsMapper {self._my_id} : __call__: module_args={self.config_builder.module_args}')
-        return _run_ansible_runner(self.config_builder)
+        res = _run_ansible_runner(self.config_builder)
+        LOGGER.debug(f'ModuleArgsMapper {self._my_id} : res: {res}')
+        return res
 
     def __str__(self):
         return f'ModuleArgsMapper<config_builder={self.config_builder}> {self._my_id}'
