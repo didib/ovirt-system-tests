@@ -84,3 +84,13 @@ def artifact_list():
 @pytest.fixture(scope="session")
 def ansible_vms_to_deploy(ansible_all):
     return ansible_all
+
+
+@pytest.fixture(scope="session")
+def ansible_engine(ansible_backend_engine):  # pylint: disable=function-redefined
+    return ansible_backend_engine
+
+
+@pytest.fixture(scope="session")
+def ansible_engine_facts(ansible_backend_engine_facts):  # pylint: disable=function-redefined
+    return ansible_backend_engine_facts

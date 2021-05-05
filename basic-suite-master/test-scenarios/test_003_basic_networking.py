@@ -24,7 +24,6 @@ import ipaddress
 
 from ost_utils import utils
 from ost_utils.pytest.fixtures.ansible import ansible_host0
-from ost_utils.pytest.fixtures.engine import *
 from ost_utils.pytest.fixtures.network import bonding_network_name
 from ost_utils.pytest.fixtures.network import management_network_name
 from ovirtsdk4.types import Bonding, HostNic, Option, VnicProfile, VnicPassThrough, VnicPassThroughMode

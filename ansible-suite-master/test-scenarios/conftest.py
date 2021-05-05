@@ -32,6 +32,8 @@ from ost_utils.pytest.fixtures.backend import host0_hostname
 from ost_utils.pytest.fixtures.backend import host1_hostname
 from ost_utils.pytest.fixtures.backend import hosts_hostnames
 
+from ost_utils.pytest.fixtures.defaults import ansible_engine
+from ost_utils.pytest.fixtures.defaults import ansible_engine_facts
 from ost_utils.pytest.fixtures.defaults import ansible_vms_to_deploy
 from ost_utils.pytest.fixtures.defaults import artifact_list
 

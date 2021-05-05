@@ -37,7 +37,7 @@ def ansible_all(ansible_by_hostname):
 
 
 @pytest.fixture(scope="session")
-def ansible_engine(ansible_by_hostname, backend_engine_hostname):
+def ansible_backend_engine(ansible_by_hostname, backend_engine_hostname):
     return ansible_by_hostname(backend_engine_hostname)
 
 
@@ -97,8 +97,8 @@ def ansible_by_hostname(ansible_inventory):
 
 
 @pytest.fixture(scope="session")
-def ansible_engine_facts(ansible_engine):
-    return Facts(ansible_engine)
+def ansible_backend_engine_facts(ansible_backend_engine):
+    return Facts(ansible_backend_engine)
 
 
 @pytest.fixture(scope="session")
