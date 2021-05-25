@@ -20,9 +20,11 @@
 #
 
 import pytest
+import tempfile
 
 from ost_utils import ansible
 from ost_utils.ansible import facts
+from ost_utils.ansible import inventory
 from ost_utils.ansible import module_mappers
 from ost_utils.ansible import private_dir
 
@@ -94,3 +96,8 @@ def ansible_clean_private_dirs():
 def ansible_collect_logs(artifacts_dir, ansible_clean_private_dirs):
     yield
     ansible.LogsCollector.save(artifacts_dir)
+
+
+@pytest.fixture(scope="session")
+def ansible_inventory():
+    return inventory.Inventory(tempfile.TemporaryDirectory().name)
