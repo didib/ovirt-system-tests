@@ -97,7 +97,7 @@ def ansible_collect_logs(artifacts_dir, ansible_clean_private_dirs):
     ansible.LogsCollector.save(artifacts_dir)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def ansible_inventory(backend, working_dir):
     res = inventory.Inventory(working_dir)
     backend.set_ansible_inventory(res)
