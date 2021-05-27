@@ -54,6 +54,15 @@ class BaseBackend(abc.ABC):
         """
 
     @abc.abstractmethod
+    def set_ansible_inventory(self, inventory):
+        """Sets our ansible_inventory to param
+
+        param is an instance of Inventory.
+
+        Add backend's inventory there
+        """
+
+    @abc.abstractmethod
     def ansible_inventory(self):
         """Returns a path to a file containing ansible inventory for the VMs.
 

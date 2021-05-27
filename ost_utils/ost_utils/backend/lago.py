@@ -20,7 +20,6 @@
 
 import json
 import os
-import tempfile
 import threading
 
 import yaml
@@ -50,19 +49,19 @@ class LagoBackend(base.BaseBackend):
 
         return mapping
 
-    def ansible_inventory(self):
+    def set_ansible_inventory(self, inventory):
         with self._lock:
-            if self._ansible_inventory is None:
+            if 'lago' not in inventory.files:
                 contents = shell.shell(["lago", "ansible_hosts"],
                                        bytes_output=True,
                                        cwd=self._prefix_path)
-                inventory = tempfile.NamedTemporaryFile()
-                inventory.write(contents)
-                inventory.flush()
-                os.fsync(inventory.fileno())
+                inventory.add('lago', contents)
                 self._ansible_inventory = inventory
 
-        return self._ansible_inventory.name
+    def ansible_inventory(self):
+        if self._ansible_inventory is None:
+            raise RuntimeError('lago backend: Inventory not set yet')
+        return self._ansible_inventory.dir
 
     def artifacts(self):
         init_file = self._init_file()

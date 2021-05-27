@@ -99,5 +99,7 @@ def ansible_collect_logs(artifacts_dir, ansible_clean_private_dirs):
 
 
 @pytest.fixture(scope="session")
-def ansible_inventory():
-    return inventory.Inventory(tempfile.TemporaryDirectory().name)
+def ansible_inventory(backend):
+    res = inventory.Inventory(tempfile.TemporaryDirectory().name)
+    backend.set_ansible_inventory(res)
+    return res
