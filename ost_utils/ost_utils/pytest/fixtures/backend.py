@@ -26,7 +26,12 @@ from ost_utils import backend as _backend
 
 @pytest.fixture(scope="session")
 def backend():
-    return _backend.default_backend()
+    res = backends.Backends()
+    res.add(
+        name='lago',
+        backend=_backend.default_backend(),
+    )
+    return res
 
 
 @pytest.fixture(scope="session")
