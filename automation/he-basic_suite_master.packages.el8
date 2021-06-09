@@ -2,7 +2,7 @@ ansible
 grubby
 lago
 openssl
-ost-images-el8stream-he-installed
+ost-images-node-base
 ost-images-el8stream-host-installed
 python3-ansible-runner
 python3-devel
