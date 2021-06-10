@@ -24,8 +24,6 @@ import pytest
 from ost_utils import engine_object_names
 from ost_utils import he_utils
 
-from ost_utils.ansible import module_mappers
-
 from ost_utils.pytest import pytest_collection_modifyitems
 
 from ost_utils.pytest.fixtures.artifacts import artifacts_dir
@@ -44,11 +42,11 @@ from ost_utils.pytest.running_time import *
 
 
 @pytest.fixture(scope="session")
-def ansible_vms_to_deploy(hosts_hostnames, storage_hostname):  # pylint: disable=function-redefined
+def ansible_vms_to_deploy(hosts_hostnames, storage_hostname, ansible_by_hostname):  # pylint: disable=function-redefined
     hostnames = [*hosts_hostnames, storage_hostname]
     hosts_pattern = "~({})".format("|".join(hostnames))
     # TODO rewrite this once we decide how we want to work with multiple inventory files
-    return module_mappers.module_mapper_for(hosts_pattern)
+    return ansible_by_hostname(hosts_pattern)
 
 
 # hosted-engine suites use a separate storage VM, but use the management

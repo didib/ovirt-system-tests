@@ -20,6 +20,7 @@
 
 import functools
 import logging
+import os
 import pytest
 
 from ost_utils import deployment_utils
@@ -35,7 +36,7 @@ def run_scripts(ansible_by_hostname):
     def do_run_scripts(hostname, scripts):
         ansible_handle = ansible_by_hostname(hostname)
         for script in scripts:
-            expanded = path.expandvars(script)
+            expanded = os.path.expandvars(script)
             LOGGER.info(f"Running {expanded} on {hostname}")
             ansible_handle.script(expanded)
     return do_run_scripts
