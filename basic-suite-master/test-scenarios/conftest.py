@@ -44,6 +44,7 @@ from ost_utils.pytest.fixtures.backend import hosts_hostnames
 from ost_utils.pytest.fixtures.defaults import *
 
 from ost_utils.pytest.fixtures.deployment import deploy
+from ost_utils.pytest.fixtures.deployment import run_scripts
 
 from ost_utils.pytest.fixtures.engine import *
 
