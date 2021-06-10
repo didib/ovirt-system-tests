@@ -62,8 +62,11 @@ from fixtures.system import system
 # Import OST utils fixtures
 from ost_utils.pytest.fixtures.ansible import ansible_all
 from ost_utils.pytest.fixtures.ansible import ansible_by_hostname
+from ost_utils.pytest.fixtures.ansible import ansible_engine_facts
 from ost_utils.pytest.fixtures.ansible import ansible_host0
+from ost_utils.pytest.fixtures.ansible import ansible_host0_facts
 from ost_utils.pytest.fixtures.ansible import ansible_host1
+from ost_utils.pytest.fixtures.ansible import ansible_host1_facts
 from ost_utils.pytest.fixtures.ansible import ansible_storage
 from ost_utils.pytest.fixtures.artifacts import artifacts
 from ost_utils.pytest.fixtures.artifacts import artifacts_dir
