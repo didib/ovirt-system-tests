@@ -22,7 +22,7 @@
 import pytest
 
 from ost_utils import ansible
-from ost_utils.ansible import facts
+from ost_utils.ansible.facts import Facts
 from ost_utils.ansible import module_mappers
 from ost_utils.ansible import private_dir
 
@@ -66,22 +66,22 @@ def ansible_by_hostname():
 
 @pytest.fixture(scope="session")
 def ansible_engine_facts():
-    return facts.engine()
+    return Facts(ansible_engine)
 
 
 @pytest.fixture(scope="session")
 def ansible_storage_facts():
-    return facts.storage()
+    return Facts(ansible_storage)
 
 
 @pytest.fixture(scope="session")
 def ansible_host0_facts():
-    return facts.host0()
+    return Facts(ansible_host0)
 
 
 @pytest.fixture(scope="session")
 def ansible_host1_facts():
-    return facts.host1()
+    return Facts(ansible_host1)
 
 
 @pytest.fixture(scope="session", autouse=True)
