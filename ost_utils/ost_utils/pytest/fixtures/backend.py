@@ -19,9 +19,10 @@
 # Refer to the README and COPYING files for full details of the license
 #
 
+import os
 import pytest
 
-from ost_utils import backend as _backend
+from ost_utils.backend import lago
 
 
 @pytest.fixture(scope="session")
@@ -29,7 +30,7 @@ def backend():
     res = backends.Backends()
     res.add(
         name='lago',
-        backend=_backend.default_backend(),
+        backend=lago.LagoBackend(os.environ["PREFIX"])
     )
     return res
 
