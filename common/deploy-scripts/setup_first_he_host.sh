@@ -107,6 +107,15 @@ sed \
     < /root/hosted-engine-deploy-answers-file.conf.in \
     > /root/hosted-engine-deploy-answers-file.conf
 
+appliance_ova_pattern=/usr/share/ovirt-engine-appliance/*.ova
+# No quotes around $appliance_ova_pattern, we want it expanded if possible
+if [ $(ls -1 $appliance_ova_pattern 2>/dev/null | wc -l) -eq 1 ]; then
+    # If there is exactly one ova image, use it. This also makes the deploy
+    # code not try to install/upgrade an appliance rpm.
+    ova=$(ls -1 $appliance_ova_pattern)
+    echo "OVEHOSTED_VM/ovfArchive=str:${ova}" >> /root/hosted-engine-deploy-answers-file.conf
+fi
+
 fstrim -va
 rm -rf /var/cache/yum/*
 hosted-engine --deploy --config-append=/root/hosted-engine-deploy-answers-file.conf
