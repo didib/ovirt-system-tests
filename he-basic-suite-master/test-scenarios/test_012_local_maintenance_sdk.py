@@ -107,3 +107,7 @@ def test_local_maintenance(hosts_service, get_vm_service_for_vm, ansible_host0):
     prev_host_id = he_host_id
     he_host_id = vm_service.get().host.id
     assert prev_host_id != he_host_id
+
+
+def test_finish_dig_loop(run_dig_loop_vt):
+    run_dig_loop_vt.join_all()

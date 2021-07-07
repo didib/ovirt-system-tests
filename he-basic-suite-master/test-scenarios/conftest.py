@@ -23,6 +23,7 @@ import pytest
 
 from ost_utils import engine_object_names
 from ost_utils import he_utils
+from ost_utils import utils
 
 from ost_utils.pytest import pytest_collection_modifyitems
 
@@ -40,6 +41,11 @@ from ost_utils.pytest.fixtures.node import *
 from ost_utils.pytest.fixtures.sdk import *
 from ost_utils.pytest.fixtures.storage import *
 from ost_utils.pytest.running_time import *
+
+
+@pytest.fixture(scope="session")
+def run_dig_loop_vt():
+    return utils.VectorThread(None)
 
 
 @pytest.fixture(scope="session")

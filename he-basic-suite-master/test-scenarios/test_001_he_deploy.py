@@ -18,7 +18,27 @@
 # Refer to the README and COPYING files for full details of the license
 #
 
+import functools
 import os
+
+
+def run_dig_loop(ansible_host0, run_loop_script, log):
+    ansible_host0.shell(f'{run_loop_script} {log}')
+
+
+def test_run_dig_loop(suite_dir, ansible_host0, run_dig_loop_vt):
+    script_name = 'run_dig_loop.sh'
+    run_dig_loop_src = os.path.join(suite_dir, script_name)
+    ansible_host0.copy(src=run_dig_loop_src, dest='/root/', mode='preserve')
+    run_dig_loop_vt.targets = [
+        functools.partial(
+            run_dig_loop,
+            ansible_host0,
+            os.path.join('/root', script_name),
+            '/var/log/run_dig_loop.log',
+        ),
+    ]
+    run_dig_loop_vt.start_all()
 
 
 def test_he_deploy(
