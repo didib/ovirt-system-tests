@@ -47,6 +47,7 @@ def test_he_deploy(
     ansible_storage,
     he_host_name,
     he_mac_address,
+    he_ipv4_address,
 ):
     answer_file_src = os.path.join(suite_dir, 'answers.conf.in')
     ansible_host0.copy(
@@ -58,6 +59,10 @@ def test_he_deploy(
     ansible_host0.copy(src=setup_file_src, dest='/root/', mode='preserve')
 
     ansible_host0.shell(
-        f'/root/setup_first_he_host.sh {he_host_name} {he_mac_address}')
+        '/root/setup_first_he_host.sh '
+        f'{he_host_name} '
+        f'{he_mac_address} '
+        f'{he_ipv4_address}'
+    )
 
     ansible_storage.shell('fstrim -va')
